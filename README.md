@@ -113,4 +113,4 @@ Params: {
 - Return with user list
 - I chaged the user structure that is returned. <br />
   Like `UserByLocation` type in `type.ts` file <br />
-  Use the relationshipe feature in Hasura so it needs to filter the users in `user_tracking` table to detect the geo area users
+  Use the relationship feature in Hasura so it needs to filter the users in `user_tracking` table to detect the geo area users
