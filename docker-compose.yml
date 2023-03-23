@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  staytouch:
+    image: staytouch-backend:v1
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    ports:
+      - "3000:3000"
+  postgres:
+    image: postgres
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgressql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+
+  graphql-engine:
+    image: hasura/graphql-engine:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: $POSTGRES_URL
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      # Note: MIGRATIONS_DIR / METADATA_DIR only needed if we'd like to have a different location in the container
+      # HASURA_GRAPHQL_MIGRATIONS_DIR: /hasura-migrations
+      # HASURA_GRAPHQL_METADATA_DIR: /hasura-metadata
+      ## uncomment next line to set an admin secret
+      HASURA_GRAPHQL_ADMIN_SECRET: $HASURA_ADMIN_SECRET
+      HASURA_GRAPHQL_JWT_SECRET: $HASURA_GRAPHQL_JWT_SECRET
+volumes:
+  pgdata:
